@@ -1,0 +1,63 @@
+name: Publish npm
+
+# Publishes @anht3889/dsh-web-search-bundle when its package.json version is not
+# yet on the registry. Bump the version in a commit first, then run this
+# workflow (or create a GitHub Release). Already-published versions are skipped.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Pack and print what would publish, but do not upload
+        type: boolean
+        default: false
+  release:
+    types: [published]
+
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout dsh-web-search
+        uses: actions/checkout@v4
+        with:
+          path: dsh-web-search
+
+      - name: Setup workspace
+        uses: ./dsh-web-search/.github/actions/setup-workspace
+        with:
+          harness-repository: ${{ vars.HARNESS_REPOSITORY || 'deepseek-ai/deepseek-harness' }}
+          harness-ref: ${{ vars.HARNESS_REF }}
+          harness-token: ${{ secrets.HARNESS_TOKEN || github.token }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Typecheck
+        working-directory: dsh-web-search
+        run: pnpm run typecheck
+
+      - name: Build
+        working-directory: dsh-web-search
+        run: pnpm run build
+
+      - name: Test
+        working-directory: dsh-web-search
+        run: pnpm run test
+
+      - name: Verify package
+        working-directory: dsh-web-search
+        run: pnpm run verify:package
+
+      - name: Publish package
+        working-directory: dsh-web-search
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        run: bash scripts/publish-npm.sh

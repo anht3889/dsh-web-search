@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout dsh-web-search
+        uses: actions/checkout@v4
+        with:
+          path: dsh-web-search
+
+      - name: Setup workspace
+        uses: ./dsh-web-search/.github/actions/setup-workspace
+        with:
+          harness-repository: ${{ vars.HARNESS_REPOSITORY || 'deepseek-ai/deepseek-harness' }}
+          harness-ref: ${{ vars.HARNESS_REF }}
+          harness-token: ${{ secrets.HARNESS_TOKEN || github.token }}
+
+      - name: Typecheck
+        working-directory: dsh-web-search
+        run: pnpm run typecheck
+
+      - name: Build
+        working-directory: dsh-web-search
+        run: pnpm run build
+
+      - name: Test
+        working-directory: dsh-web-search
+        run: pnpm run test
+
+      - name: Verify package
+        working-directory: dsh-web-search
+        run: pnpm run verify:package
