@@ -2,7 +2,7 @@
 import { act, createElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, expect, test, vi } from 'vitest'
-import { WebSearchApi, type WebSearchConfigView } from '../../src/client/api.ts'
+import { WebSearchApi, BRAVE_DEFAULT_BASE_URL, TAVILY_DEFAULT_BASE_URL, type WebSearchConfigView } from '../../src/client/api.ts'
 import { WebSearchStore } from '../../src/client/store.ts'
 import { WebSearchSection } from '../../src/client/WebSearchSection.tsx'
 import { zh } from '../../src/client/locales.ts'
@@ -32,6 +32,31 @@ test('switching engines renders only fields owned by the selected engine', async
   expect(field(container, 'apiKey')).not.toBeNull()
   expect(field(container, 'braveBase')).not.toBeNull()
   expect(field(container, 'searxngBase')).toBeNull()
+})
+
+test('Tavily and Brave show their public API bases when the catalog has no override', async () => {
+  stubApi(view({ engine: 'tavily' }))
+  const { container } = await renderSection(new WebSearchApi())
+
+  expect(value(field(container, 'tavilyBase'))).toBe(TAVILY_DEFAULT_BASE_URL)
+  expect(field(container, 'tavilyBase')?.placeholder).toBe(TAVILY_DEFAULT_BASE_URL)
+
+  await change(select(container), 'brave')
+  expect(value(field(container, 'braveBase'))).toBe(BRAVE_DEFAULT_BASE_URL)
+  expect(field(container, 'braveBase')?.placeholder).toBe(BRAVE_DEFAULT_BASE_URL)
+})
+
+test('saving Tavily without editing the API base omits the default from the catalog', async () => {
+  const fetchMock = stubApi(view({ engine: 'tavily' }))
+  const { container } = await renderSection(new WebSearchApi())
+
+  await change(field(container, 'apiKey'), 'tavily-secret')
+  await click(container, zh.save)
+
+  expect(requestBody(fetchMock, '/web-search/config')).toEqual({
+    engine: 'tavily',
+    engines: {},
+  })
 })
 
 test('drafting SearXNG reports no API key state even when another engine has a key', async () => {

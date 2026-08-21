@@ -1,10 +1,12 @@
-import type {
-  SearchEngineId,
-  WebSearchApi,
-  WebSearchCatalog,
-  WebSearchConfigView,
-  WebSearchSecretDescriptions,
-  WebSearchSecretRef,
+import {
+  BRAVE_DEFAULT_BASE_URL,
+  TAVILY_DEFAULT_BASE_URL,
+  type SearchEngineId,
+  type WebSearchApi,
+  type WebSearchCatalog,
+  type WebSearchConfigView,
+  type WebSearchSecretDescriptions,
+  type WebSearchSecretRef,
 } from './api.ts'
 
 /** Editable values retained independently from section component lifetime. */
@@ -228,18 +230,26 @@ function draftsFrom(catalog: WebSearchCatalog): WebSearchDrafts {
     engine: catalog.engine,
     tavilyKey: '',
     braveKey: '',
-    tavilyBase: catalog.engines.tavily?.baseURL ?? '',
-    braveBase: catalog.engines.brave?.baseURL ?? '',
+    tavilyBase: catalog.engines.tavily?.baseURL ?? TAVILY_DEFAULT_BASE_URL,
+    braveBase: catalog.engines.brave?.baseURL ?? BRAVE_DEFAULT_BASE_URL,
     searxngBase: catalog.engines.searxng?.baseURL ?? '',
   }
 }
 
 function catalogFrom(drafts: WebSearchDrafts): WebSearchCatalog {
   const engines: WebSearchCatalog['engines'] = {}
-  if (drafts.tavilyBase !== '') engines.tavily = { baseURL: drafts.tavilyBase }
-  if (drafts.braveBase !== '') engines.brave = { baseURL: drafts.braveBase }
+  const tavily = keyedOverride(drafts.tavilyBase, TAVILY_DEFAULT_BASE_URL)
+  const brave = keyedOverride(drafts.braveBase, BRAVE_DEFAULT_BASE_URL)
+  if (tavily !== undefined) engines.tavily = tavily
+  if (brave !== undefined) engines.brave = brave
   if (drafts.searxngBase !== '') engines.searxng = { baseURL: drafts.searxngBase }
   return { engine: drafts.engine, engines }
+}
+
+/** Persist a keyed-engine URL only when it differs from the public default. */
+function keyedOverride(value: string, defaultURL: string): { baseURL: string } | undefined {
+  if (value === '' || value === defaultURL) return undefined
+  return { baseURL: value }
 }
 
 function secretsFrom(drafts: WebSearchDrafts): Partial<Record<WebSearchSecretRef, string>> {

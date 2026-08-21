@@ -1,7 +1,12 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import type { ChangeEvent, FormEvent, ReactNode } from 'react'
 import { Button } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { SearchEngineId, WebSearchApi } from './api.ts'
+import {
+  BRAVE_DEFAULT_BASE_URL,
+  TAVILY_DEFAULT_BASE_URL,
+  type SearchEngineId,
+  type WebSearchApi,
+} from './api.ts'
 import type { WebSearchSettingsKey } from './locales.ts'
 import { webSearchStoreFor, type WebSearchDrafts, type WebSearchSnapshot } from './store.ts'
 import styles from './WebSearchSection.module.css'
@@ -88,6 +93,7 @@ export function WebSearchSection({ api, t }: WebSearchSectionProps): ReactNode {
                   <input
                     name={keyedEngine === 'tavily' ? 'tavilyBase' : 'braveBase'}
                     type="url"
+                    placeholder={keyedEngine === 'tavily' ? TAVILY_DEFAULT_BASE_URL : BRAVE_DEFAULT_BASE_URL}
                     value={keyedEngine === 'tavily' ? drafts.tavilyBase : drafts.braveBase}
                     onChange={update}
                   />

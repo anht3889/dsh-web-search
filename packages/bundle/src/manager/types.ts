@@ -1,7 +1,8 @@
 /**
  * Durable web-search catalog types shared by the Host manager and the browser
- * Settings section. Type-only for browser consumers; the constants below are
- * Host-side defaults.
+ * Settings section. Type-only for browser consumers except the default API
+ * bases, which Settings shows when a catalog omits an override. SearXNG has
+ * no public default.
  * @module @anht3889/dsh-web-search-bundle/manager/types
  */
 

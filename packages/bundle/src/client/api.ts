@@ -3,13 +3,15 @@
  * @module @anht3889/dsh-web-search-bundle/client/api
  */
 
-// The catalog is one wire format owned by the manager's type module. Both
-// statements are type-only, so no Host module reaches the browser bundle; the
-// specifier ends in `.js` because the two compiler faces emit into different
-// directories, which relative-extension rewriting rejects for a `.ts` path.
+// Catalog types and default API bases live in the manager type module. Type
+// imports stay erased; the two default URL constants are the only values the
+// browser bundle copies. The specifier ends in `.js` because the two compiler
+// faces emit into different directories, which relative-extension rewriting
+// rejects for a `.ts` path.
 import type { WebSearchCatalog } from '../manager/types.js'
 
 export type { EngineEndpoints, SearchEngineId, WebSearchCatalog } from '../manager/types.js'
+export { BRAVE_DEFAULT_BASE_URL, TAVILY_DEFAULT_BASE_URL } from '../manager/types.js'
 
 /** Secret references accepted by the write-only secrets endpoint. */
 export type WebSearchSecretRef = 'TAVILY_API_KEY' | 'BRAVE_API_KEY'
