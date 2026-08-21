@@ -1,0 +1,11 @@
+- insert:
+    - id: dsh-web-search
+      name: '@anht3889/dsh-web-search-bundle/manager'
+      config:
+        catalogPath: !!js dshHomePath('web-search', 'config.json')
+        secretsPath: !!js dshHomePath('web-search', 'secrets.yaml')
+    - id: dsh-web-search-ui
+      name: '@anht3889/dsh-web-search-bundle'
+- id: web
+  config:
+    searchProvider: dsh-web-search

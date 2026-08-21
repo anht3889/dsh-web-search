@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src/manager",
+    "outDir": "lib/manager",
+    "declarationDir": "lib/types/manager",
+    "tsBuildInfoFile": ".cache/tsconfig.manager.tsbuildinfo",
+    "composite": true,
+    "rewriteRelativeImportExtensions": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/manager"
+  ]
+}

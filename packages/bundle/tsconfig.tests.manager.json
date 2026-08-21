@@ -1,0 +1,27 @@
+{
+  // Typecheck face for the Host-side tests. Non-emitting and reference-free so
+  // it resolves harness packages from this package's installed dependencies
+  // instead of compiling the sibling checkout. Compiler options otherwise match
+  // tsconfig.manager.json, plus the `Promise.withResolvers` library the tests
+  // use to sequence streamed requests.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "allowImportingTsExtensions": true,
+    "lib": [
+      "ES2022",
+      "ES2024.Promise"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/manager",
+    "tests/manager",
+    "tests/support/errors.ts",
+    "tests/support/fetch.ts",
+    "tests/support/responses.ts"
+  ]
+}

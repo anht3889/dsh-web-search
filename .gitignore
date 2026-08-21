@@ -1,0 +1,11 @@
+.worktrees/
+.superpowers/
+node_modules
+lib
+dist
+.cache
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example

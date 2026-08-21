@@ -1,0 +1,48 @@
+{
+  // Typecheck face for the browser-side tests. It reuses the client build
+  // face's options and repeats its project references (references are not
+  // inherited through `extends`) so harness client types resolve from their
+  // built declarations, and writes its own outputs under .cache so checking
+  // tests never touches lib/ or rebuilds the sibling checkout.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "outDir": ".cache/tests-client",
+    "declarationDir": ".cache/tests-client/types",
+    "tsBuildInfoFile": ".cache/tsconfig.tests.client.tsbuildinfo"
+  },
+  "include": [
+    "src/index.ts",
+    "src/invariant.ts",
+    "src/css-modules.d.ts",
+    "src/client",
+    "tests/client"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.manager.json"
+    },
+    {
+      "path": "../../../deepseek-harness/vendor/cordis"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/client/runtime"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/client/ui-slots"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/client/ui-primitives"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/client/ui-settings"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/client/locale"
+    },
+    {
+      "path": "../../../deepseek-harness/packages/runtime-diagnostics/invariants"
+    }
+  ]
+}

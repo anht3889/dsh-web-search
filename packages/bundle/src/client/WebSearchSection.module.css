@@ -1,0 +1,47 @@
+.section {
+  color: var(--dsw-fg, inherit);
+  display: grid;
+  gap: var(--dsw-space-4, 16px);
+}
+
+.title, .status, .dirty, .error {
+  margin: 0;
+}
+
+.form {
+  display: grid;
+  gap: var(--dsw-space-3, 12px);
+}
+
+.form label {
+  display: grid;
+  gap: var(--dsw-space-1, 4px);
+}
+
+.form input, .form select {
+  background: var(--dsw-input-bg, transparent);
+  border: 1px solid var(--dsw-input-border, currentColor);
+  border-radius: var(--dsw-radius-sm, 4px);
+  color: var(--dsw-input-fg, inherit);
+  font: inherit;
+  padding: var(--dsw-space-2, 8px);
+}
+
+.status {
+  color: var(--dsw-fg-muted, inherit);
+}
+
+.dirty {
+  color: var(--dsw-warning-fg, inherit);
+}
+
+.error {
+  color: var(--dsw-danger-fg, inherit);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  gap: var(--dsw-space-2, 8px);
+  justify-content: flex-end;
+}

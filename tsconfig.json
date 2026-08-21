@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/bundle/tsconfig.manager.json" },
+    { "path": "./packages/bundle" }
+  ]
+}
